@@ -1,6 +1,9 @@
 from typing import Any, Callable, Dict, Optional, Tuple, Type, Union
 
-from langchain.agents import Tool as LCTool
+try:
+    from langchain.agents import Tool as LCTool
+except ImportError:
+    from langchain_core.tools import Tool as LCTool
 from pydantic import BaseModel
 
 from kotaemon.base import BaseComponent

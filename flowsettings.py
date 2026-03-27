@@ -173,7 +173,8 @@ if OPENAI_API_KEY:
     }
 
 VOYAGE_API_KEY = config("VOYAGE_API_KEY", default="")
-if VOYAGE_API_KEY:
+_VOYAGE_PLACEHOLDER = ("<VOYAGE_API_KEY>", "your-key", "")
+if VOYAGE_API_KEY and VOYAGE_API_KEY not in _VOYAGE_PLACEHOLDER:
     KH_EMBEDDINGS["voyageai"] = {
         "spec": {
             "__type__": "kotaemon.embeddings.VoyageAIEmbeddings",
@@ -254,14 +255,16 @@ KH_LLMS["groq"] = {
     },
     "default": False,
 }
-KH_LLMS["cohere"] = {
-    "spec": {
-        "__type__": "kotaemon.llms.chats.LCCohereChat",
-        "model_name": "command-r-plus-08-2024",
-        "api_key": config("COHERE_API_KEY", default="your-key"),
-    },
-    "default": False,
-}
+_COHERE_API_KEY = config("COHERE_API_KEY", default="")
+if _COHERE_API_KEY and _COHERE_API_KEY not in ("your-key", "<COHERE_API_KEY>"):
+    KH_LLMS["cohere"] = {
+        "spec": {
+            "__type__": "kotaemon.llms.chats.LCCohereChat",
+            "model_name": "command-r-plus-08-2024",
+            "api_key": _COHERE_API_KEY,
+        },
+        "default": False,
+    }
 KH_LLMS["mistral"] = {
     "spec": {
         "__type__": "kotaemon.llms.ChatOpenAI",
@@ -273,15 +276,16 @@ KH_LLMS["mistral"] = {
 }
 
 # additional embeddings configurations
-KH_EMBEDDINGS["cohere"] = {
-    "spec": {
-        "__type__": "kotaemon.embeddings.LCCohereEmbeddings",
-        "model": "embed-multilingual-v3.0",
-        "cohere_api_key": config("COHERE_API_KEY", default="your-key"),
-        "user_agent": "default",
-    },
-    "default": False,
-}
+if _COHERE_API_KEY and _COHERE_API_KEY not in ("your-key", "<COHERE_API_KEY>"):
+    KH_EMBEDDINGS["cohere"] = {
+        "spec": {
+            "__type__": "kotaemon.embeddings.LCCohereEmbeddings",
+            "model": "embed-multilingual-v3.0",
+            "cohere_api_key": _COHERE_API_KEY,
+            "user_agent": "default",
+        },
+        "default": False,
+    }
 KH_EMBEDDINGS["google"] = {
     "spec": {
         "__type__": "kotaemon.embeddings.LCGoogleEmbeddings",
@@ -307,14 +311,15 @@ KH_EMBEDDINGS["mistral"] = {
 # }
 
 # default reranking models
-KH_RERANKINGS["cohere"] = {
-    "spec": {
-        "__type__": "kotaemon.rerankings.CohereReranking",
-        "model_name": "rerank-multilingual-v2.0",
-        "cohere_api_key": config("COHERE_API_KEY", default=""),
-    },
-    "default": True,
-}
+if _COHERE_API_KEY and _COHERE_API_KEY not in ("your-key", "<COHERE_API_KEY>"):
+    KH_RERANKINGS["cohere"] = {
+        "spec": {
+            "__type__": "kotaemon.rerankings.CohereReranking",
+            "model_name": "rerank-multilingual-v2.0",
+            "cohere_api_key": _COHERE_API_KEY,
+        },
+        "default": True,
+    }
 
 KH_REASONINGS = [
     "ktem.reasoning.simple.FullQAPipeline",

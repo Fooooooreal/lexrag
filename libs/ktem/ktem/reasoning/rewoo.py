@@ -8,7 +8,10 @@ from ktem.mcp.manager import mcp_manager
 from ktem.reasoning.base import BaseReasoning
 from ktem.utils.generator import Generator as GeneratorWrapper
 from ktem.utils.render import Render
-from langchain.text_splitter import CharacterTextSplitter
+try:
+    from langchain.text_splitter import CharacterTextSplitter
+except ImportError:
+    from langchain_text_splitters import CharacterTextSplitter
 from pydantic import BaseModel, Field
 
 from kotaemon.agents import (
