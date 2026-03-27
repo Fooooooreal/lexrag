@@ -14,7 +14,7 @@ this_file = getframeinfo(cur_frame).filename
 this_dir = Path(this_file).parent
 
 # change this if your app use a different name
-KH_PACKAGE_NAME = "kotaemon_app"
+KH_PACKAGE_NAME = "lexrag"
 
 KH_APP_VERSION = config("KH_APP_VERSION", None)
 if not KH_APP_VERSION:
@@ -69,7 +69,7 @@ KH_MODE = "dev"
 KH_SSO_ENABLED = config("KH_SSO_ENABLED", default=False, cast=bool)
 
 KH_FEATURE_CHAT_SUGGESTION = config(
-    "KH_FEATURE_CHAT_SUGGESTION", default=False, cast=bool
+    "KH_FEATURE_CHAT_SUGGESTION", default=True, cast=bool
 )
 KH_FEATURE_USER_MANAGEMENT = config(
     "KH_FEATURE_USER_MANAGEMENT", default=True, cast=bool
@@ -229,6 +229,15 @@ if config("LOCAL_MODEL", default=""):
         "default": False,
     }
 
+# Multilingual embeddings for legal documents (always available)
+KH_EMBEDDINGS["fast_embed"] = {
+    "spec": {
+        "__type__": "kotaemon.embeddings.FastEmbedEmbeddings",
+        "model_name": "BAAI/bge-m3",
+    },
+    "default": False,
+}
+
 # additional LLM configurations
 KH_LLMS["claude"] = {
     "spec": {
@@ -327,7 +336,7 @@ KH_REASONINGS = [
     "ktem.reasoning.react.ReactAgentPipeline",
     "ktem.reasoning.rewoo.RewooAgentPipeline",
 ]
-KH_REASONINGS_USE_MULTIMODAL = config("USE_MULTIMODAL", default=False, cast=bool)
+KH_REASONINGS_USE_MULTIMODAL = False
 KH_VLM_ENDPOINT = "{0}/openai/deployments/{1}/chat/completions?api-version={2}".format(
     config("AZURE_OPENAI_ENDPOINT", default=""),
     config("OPENAI_VISION_DEPLOYMENT_NAME", default="gpt-4o"),
@@ -335,7 +344,17 @@ KH_VLM_ENDPOINT = "{0}/openai/deployments/{1}/chat/completions?api-version={2}".
 )
 
 
-SETTINGS_APP: dict[str, dict] = {}
+SETTINGS_APP: dict[str, dict] = {
+    "chat_suggestion": {
+        "name": "Chat Suggestions",
+        "value": [
+            "What consumer rights apply when returning goods?",
+            "What is the statute of limitations for labor disputes?",
+            "What are the grounds for termination of an employment contract?",
+            "What does the law say about personal data protection?",
+        ],
+    },
+}
 
 
 SETTINGS_REASONING = {

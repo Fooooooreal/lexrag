@@ -10,11 +10,23 @@ if GRADIO_TEMP_DIR is None:
     GRADIO_TEMP_DIR = os.path.join(KH_APP_DATA_DIR, "gradio_tmp")
     os.environ["GRADIO_TEMP_DIR"] = GRADIO_TEMP_DIR
 
+# Load custom LexRAG CSS
+_CUSTOM_CSS_PATH = os.path.join(os.path.dirname(__file__), "assets", "custom.css")
+_CUSTOM_CSS = ""
+if os.path.exists(_CUSTOM_CSS_PATH):
+    with open(_CUSTOM_CSS_PATH, "r") as f:
+        _CUSTOM_CSS = f.read()
+
 
 from ktem.main import App  # noqa
 
 app = App()
+# Append custom LexRAG CSS to the base CSS so it's included in gr.Blocks
+if _CUSTOM_CSS:
+    app._css = (app._css or "") + "\n" + _CUSTOM_CSS
+
 demo = app.make()
+port = int(os.environ.get("PORT", os.environ.get("GRADIO_SERVER_PORT", 7860)))
 demo.queue().launch(
     favicon_path=app._favicon,
     inbrowser=True,
@@ -23,4 +35,6 @@ demo.queue().launch(
         GRADIO_TEMP_DIR,
     ],
     share=KH_GRADIO_SHARE,
+    server_name="0.0.0.0",
+    server_port=port,
 )

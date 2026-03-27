@@ -1,0 +1,25 @@
+/* LexRAG Legal Theme */
+:root {
+    --primary-600: #1a365d !important;
+    --primary-500: #2a4a7f !important;
+    --primary-400: #3a5a9f !important;
+    --secondary-600: #c9a84c !important;
+    --background-fill-primary: #f7f8fa !important;
+    --block-title-text-color: #1a365d !important;
+}
+
+.app-title {
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    color: #1a365d !important;
+}
+
+.message {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    line-height: 1.6 !important;
+}
+
+.citation-highlight {
+    background-color: rgba(201, 168, 76, 0.2) !important;
+    border-left: 3px solid #c9a84c !important;
+    padding-left: 8px !important;
+}
