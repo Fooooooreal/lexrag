@@ -53,6 +53,15 @@ RUN --mount=type=ssh  \
     --mount=type=cache,target=/root/.cache/uv  \
     if [ "$TARGETARCH" = "amd64" ]; then uv pip install --python .venv "graphrag<=0.3.6" future; fi
 
+# Pre-download multilingual embedding model to avoid cold-start delay
+RUN .venv/bin/python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='BAAI/bge-m3')" || true
+
+# Railway compatibility
+ENV GRADIO_SERVER_NAME=0.0.0.0
+ENV GRADIO_SERVER_PORT=7860
+
+EXPOSE 7860
+
 ENTRYPOINT ["sh", "/app/launch.sh"]
 
 # Full version

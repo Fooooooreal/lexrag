@@ -17,7 +17,7 @@ else
         echo "KH_SSO_ENABLED is true. Launching in SSO mode..."
         GR_FILE_ROOT_PATH="/app" KH_SSO_ENABLED=true .venv/bin/uvicorn sso_app:app --host "$GRADIO_SERVER_NAME" --port "$GRADIO_SERVER_PORT"
     else
-        ollama serve &
+        ollama serve 2>/dev/null &
         .venv/bin/python app.py
     fi
 fi
