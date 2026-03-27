@@ -448,7 +448,17 @@ class FullQAPipeline(BaseReasoning):
             },
             "system_prompt": {
                 "name": "System Prompt",
-                "value": ("This is a question answering system."),
+                "value": (
+                    "You are a legal assistant 'LexRAG' specializing in legislative document analysis.\n\n"
+                    "RULES:\n"
+                    "1. Answer ONLY based on the provided documents. If information is not in the documents, say so directly.\n"
+                    "2. Always cite exact references: law name, article number, paragraph, clause.\n"
+                    "3. Quote relevant fragments verbatim using quotation marks.\n"
+                    "4. If the question involves multiple legal acts, mention all relevant ones.\n"
+                    "5. If there are contradictions between norms, point them out and explain which norm takes priority.\n"
+                    "6. Use legal terminology but explain complex terms in plain language.\n"
+                    "7. Structure your answer: brief conclusion first, then detailed reasoning with references."
+                ),
             },
             "qa_prompt": {
                 "name": "QA Prompt (contains {context}, {question}, {lang})",
