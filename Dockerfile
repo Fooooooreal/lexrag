@@ -45,12 +45,12 @@ COPY .env.example /app/.env
 
 # Install pip packages
 RUN --mount=type=ssh  \
-    --mount=type=cache,target=/root/.cache/uv  \
+    --mount=type=cache,id=uv-cache,target=/root/.cache/uv  \
     uv sync --frozen --no-cache \
     && uv pip install --python .venv "pdfservices-sdk@git+https://github.com/niallcm/pdfservices-python-sdk.git@bump-and-unfreeze-requirements"
 
 RUN --mount=type=ssh  \
-    --mount=type=cache,target=/root/.cache/uv  \
+    --mount=type=cache,id=uv-cache,target=/root/.cache/uv  \
     if [ "$TARGETARCH" = "amd64" ]; then uv pip install --python .venv "graphrag<=0.3.6" future; fi
 
 # Pre-download multilingual embedding model to avoid cold-start delay
@@ -82,23 +82,23 @@ RUN apt-get update -qqy && \
 
 # Install torch and torchvision for unstructured
 RUN --mount=type=ssh  \
-    --mount=type=cache,target=/root/.cache/uv  \
+    --mount=type=cache,id=uv-cache,target=/root/.cache/uv  \
     uv pip install --python .venv torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 # Install additional pip packages
 RUN --mount=type=ssh  \
-    --mount=type=cache,target=/root/.cache/uv  \
+    --mount=type=cache,id=uv-cache,target=/root/.cache/uv  \
     uv pip install --python .venv "libs/kotaemon[adv]" \
     && uv pip install --python .venv unstructured[all-docs]
 
 # Install lightRAG
 ENV USE_LIGHTRAG=true
 RUN --mount=type=ssh  \
-    --mount=type=cache,target=/root/.cache/uv  \
+    --mount=type=cache,id=uv-cache,target=/root/.cache/uv  \
     uv pip install --python .venv aioboto3 nano-vectordb ollama xxhash "lightrag-hku<=1.3.0"
 
 RUN --mount=type=ssh  \
-    --mount=type=cache,target=/root/.cache/uv  \
+    --mount=type=cache,id=uv-cache,target=/root/.cache/uv  \
     uv pip install --python .venv "docling<=2.5.2"
 
 # Download NLTK data from LlamaIndex
