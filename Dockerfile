@@ -18,4 +18,4 @@ ENV GRADIO_SERVER_PORT=7860
 EXPOSE 7860
 
 ENTRYPOINT []
-CMD [".venv/bin/python", "app.py"]
+CMD ["python", "app.py"]
