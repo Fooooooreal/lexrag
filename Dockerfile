@@ -1,41 +1,20 @@
-FROM python:3.10-slim
-
-# System dependencies
-RUN apt-get update -qqy && \
-    apt-get install -y --no-install-recommends \
-        git \
-        gcc \
-        g++ \
-        poppler-utils \
-        libpoppler-dev \
-        unzip \
-        curl \
-        && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+FROM ghcr.io/cinnamon/kotaemon:main-lite
 
 WORKDIR /app
 
-# Copy project
-COPY . /app
+# Copy our customized files over the base image
+COPY flowsettings.py /app/flowsettings.py
+COPY app.py /app/app.py
 COPY .env.example /app/.env
+COPY assets/ /app/assets/
+COPY README.md /app/README.md
 
-# Download pdfjs for PDF viewer
-RUN chmod +x /app/scripts/download_pdfjs.sh && \
-    bash /app/scripts/download_pdfjs.sh /app/libs/ktem/ktem/assets/prebuilt/pdfjs-dist
-
-# Install Python dependencies with pip
-RUN pip install --no-cache-dir -e "libs/kotaemon[all]" && \
-    pip install --no-cache-dir -e "libs/ktem"
-
-# Pre-download multilingual embedding model
-RUN python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='BAAI/bge-m3')" || true
+# Overwrite modified source files
+COPY libs/ktem/ktem/reasoning/simple.py /app/libs/ktem/ktem/reasoning/simple.py
 
 # Railway compatibility
 ENV GRADIO_SERVER_NAME=0.0.0.0
 ENV GRADIO_SERVER_PORT=7860
 EXPOSE 7860
 
-CMD ["python", "app.py"]
+CMD [".venv/bin/python", "app.py"]
