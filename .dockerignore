@@ -8,8 +8,4 @@ env/
 .commitlintrc
 .gitignore
 .gitattributes
-README.md
 *.zip
-*.sh
-
-!/launch.sh
